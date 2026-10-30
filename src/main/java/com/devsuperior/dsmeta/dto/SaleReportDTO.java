@@ -1,5 +1,7 @@
 package com.devsuperior.dsmeta.dto;
 
+import com.devsuperior.dsmeta.entities.Sale;
+
 import java.time.LocalDate;
 
 public class SaleReportDTO {
@@ -15,6 +17,13 @@ public class SaleReportDTO {
         this.date = date;
         this.amount = amount;
         this.sellerName = sellerName;
+    }
+
+    public SaleReportDTO(Sale sale){
+        this.id = sale.getId();
+        this.date = sale.getDate();
+        this.amount = sale.getAmount();
+        this.sellerName = sale.getSeller().getName();
     }
 
     public Long getId() {

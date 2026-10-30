@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +31,13 @@ public class SaleService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<SaleReportDTO> searchReport(String minDate, String maxDate, String name) {
+	public Page<SaleReportDTO> searchReport(String minDate, String maxDate, String name, Pageable pageable) {
 
 		DateRange dateRange = parseDates(minDate, maxDate);
 
 		String sellerName = (name == null) ? "" : name;
 
-		List<Sale> result = repository.searchReport(dateRange.min(), dateRange.max(), sellerName);
-		return result.stream()
-				.map(sale -> new SaleReportDTO(sale.getId(), sale.getDate(), sale.getAmount(), sale.getSeller().getName()))
-				.toList();
+		return repository.searchReport(dateRange.min(), dateRange.max(), sellerName, pageable).map(SaleReportDTO::new);
 	}
 
 	@Transactional(readOnly = true)
